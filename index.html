@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Precificação de imóveis · Mosaic Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f6f6f1; --surface2:#ecebe3; --line:#dcdbd0;
+  --ink:#2b2c22; --muted:#6c6d5e; --olive:#5d5f36; --olive-ink:#ffffff;
+  --sage:#c9d7a6; --sage-ink:#2b2c22;
+  --ok:#5f8a3a; --warn:#b98a1c; --bad:#b4512e; --tx:#3f6f8f;
+  --display:"Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1b16; --surface:#23251d; --surface2:#2d3025; --line:#3a3d30;
+    --ink:#ecebe2; --muted:#a6a796; --olive:#b7bb85; --olive-ink:#1a1b16;
+    --sage:#3e4a2c; --sage-ink:#ecebe2;
+    --ok:#8fbf63; --warn:#e0b24a; --bad:#e2805c; --tx:#7fb2d4; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1b16; --surface:#23251d; --surface2:#2d3025; --line:#3a3d30;
+  --ink:#ecebe2; --muted:#a6a796; --olive:#b7bb85; --olive-ink:#1a1b16;
+  --sage:#3e4a2c; --sage-ink:#ecebe2;
+  --ok:#8fbf63; --warn:#e0b24a; --bad:#e2805c; --tx:#7fb2d4; color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:300;font-size:26px;letter-spacing:.14em;color:var(--olive);line-height:1}
+.brand small{display:block;font-size:11px;letter-spacing:.08em;color:var(--muted);margin-top:4px;font-weight:400}
+.top-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:14px}
+.btn:hover{border-color:var(--olive)}
+.btn.primary{background:var(--olive);color:var(--olive-ink);border-color:var(--olive)}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink)}
+select.btn{appearance:none;padding-right:14px;max-width:220px}
+
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 120px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;align-items:start}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr}}
+
+/* steps */
+.step{margin-bottom:36px}
+.step-h{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:16px}
+.step-n{font-family:var(--display);font-weight:300;font-size:40px;line-height:1;color:var(--olive);min-width:30px}
+.step-h h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
+.step-h p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.step-h .grow{flex:1}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px 14px}
+.f{display:flex;flex-direction:column;gap:4px}
+.f.wide{grid-column:span 2}
+.f.full{grid-column:1/-1}
+.f label{font-size:12.5px;color:var(--muted)}
+.inp{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;min-width:0}
+.inp:focus{border-color:var(--olive);outline:none}
+textarea.inp{resize:vertical;min-height:84px;line-height:1.45}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;gap:2px}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:999px;cursor:pointer;font-size:13.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--olive);color:var(--olive-ink)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px;min-width:720px}
+.t th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:8px;background:var(--surface);border-bottom:1px solid var(--line);white-space:nowrap}
+.t td{padding:4px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.t td .inp{border-color:transparent;background:transparent;padding:6px}
+.t td .inp:hover{border-color:var(--line)}
+.t td .inp:focus{border-color:var(--olive);background:var(--bg)}
+.t .num{text-align:right;font-variant-numeric:tabular-nums}
+.t td.calc{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;padding-right:10px}
+.t tr.off td{opacity:.45}
+.t input[type=checkbox]{width:16px;height:16px;accent-color:var(--olive)}
+.x{border:0;background:transparent;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;padding:4px 8px;border-radius:6px}
+.x:hover{color:var(--bad);background:var(--surface)}
+.tbl-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;white-space:nowrap;border:1px solid currentColor}
+.tag.ok{color:var(--ok)} .tag.warn{color:var(--warn)} .tag.bad{color:var(--bad)} .tag.mut{color:var(--muted)}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:13.5px}
+
+.params{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;background:var(--surface);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.params .f{width:180px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px dashed var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.chip:hover{border-color:var(--olive);color:var(--ink)}
+
+/* side result */
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}
+@media (max-width:1000px){.side{position:static}}
+.res{background:var(--surface);border-radius:14px;padding:20px}
+.res h3{font-family:var(--display);font-weight:400;font-size:15px;margin:0 0 2px;color:var(--muted)}
+.big{font-family:var(--display);font-weight:300;font-size:44px;line-height:1.05;letter-spacing:-.01em;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:13.5px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin-top:16px;font-size:14px;font-variant-numeric:tabular-nums}
+.kv dt{color:var(--muted)} .kv dd{margin:0;text-align:right}
+.kv .hl{font-weight:600}
+.sep{height:1px;background:var(--line);margin:16px 0}
+.args{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13.5px}
+.args li{padding-left:14px;border-left:2px solid var(--sage)}
+.args li.warn{border-left-color:var(--warn)}
+.side .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+/* ruler */
+.ruler{margin-top:6px}
+.ruler svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted);margin-top:4px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+
+/* mobile bottom bar */
+.mbar{display:none}
+@media (max-width:1000px){
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--olive);color:var(--olive-ink);padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px));align-items:center;gap:12px}
+  .mbar b{font-family:var(--display);font-weight:400;font-size:22px}
+  .mbar a{margin-left:auto;color:inherit;font-size:13.5px}
+}
+
+/* laudo (always paper) */
+.laudo-wrap{overflow-x:auto}
+.laudo{background:#fff;color:#2b2c22;border:1px solid var(--line);border-radius:6px;padding:28px 30px;max-width:820px;font:13px/1.45 var(--body);min-width:600px}
+.laudo .lhead{display:grid;grid-template-columns:150px 1fr;border:1.5px solid #2b2c22}
+.laudo .lhead div{padding:6px 10px;border-bottom:1.5px solid #2b2c22}
+.laudo .lhead div:nth-child(odd){border-right:1.5px solid #2b2c22;font-weight:600;font-size:11px}
+.laudo .lhead div:nth-last-child(-n+2){border-bottom:0}
+.laudo .ltitle{display:flex;justify-content:space-between;align-items:flex-end;margin:10px 0 8px}
+.laudo .ltitle h1{font-family:var(--display);font-weight:400;font-size:28px;color:#5d5f36;margin:0;letter-spacing:.02em}
+.laudo .logo{font-family:var(--display);font-weight:300;font-size:24px;letter-spacing:.16em;color:#5d5f36;border-bottom:1px solid #5d5f36;padding:0 4px}
+.laudo .bar{background:#c9d7a6;font-weight:600;font-size:12px;text-align:center;padding:5px;margin-top:14px}
+.laudo .box{border:1px solid #2b2c22;padding:10px 12px}
+.laudo .bar + .box{border-top:0}
+.laudo .resumo{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #2b2c22}
+.laudo .resumo > div{padding:8px 10px;font-size:11.5px;font-weight:600}
+.laudo .resumo > div:first-child{background:#c9d7a6;display:flex;align-items:center;justify-content:center;font-size:12px}
+.laudo .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.laudo .two .bar{margin-top:14px}
+.laudo pre{white-space:pre-wrap;font:inherit;margin:0}
+.laudo table{width:100%;border-collapse:collapse;font-size:11.5px}
+.laudo th,.laudo td{padding:3px 5px;border-bottom:1px solid #e3e2da;text-align:left}
+.laudo th{font-weight:600}
+.laudo td.n,.laudo th.n{text-align:right;font-variant-numeric:tabular-nums}
+.laudo .concl{font-size:13.5px;line-height:1.6;padding:14px 16px}
+.laudo .foot{display:flex;justify-content:space-between;font-weight:600;font-size:11.5px;margin-top:16px}
+.laudo .src{font-size:9px;font-weight:600}
+
+/* claude */
+.ai{border:1px solid var(--olive);border-radius:14px;padding:18px 20px;margin-bottom:36px;background:var(--surface)}
+.ai h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
+.ai > p{margin:2px 0 12px;color:var(--muted);font-size:13.5px;max-width:70ch}
+.ai textarea{min-height:130px;background:var(--bg)}
+.ai.drag{border-style:dashed;background:var(--surface2)}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.thumbs figure{position:relative;margin:0;width:84px;height:64px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs button{position:absolute;top:2px;right:2px;border:0;border-radius:50%;width:20px;height:20px;line-height:18px;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;padding:0}
+.avisos{margin:10px 0 0;padding-left:18px;font-size:13px;color:var(--warn)}
+.parecer{font-size:13.5px;white-space:pre-wrap;margin-top:12px;padding:12px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.parecer:empty{display:none}
+/* dialog */
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);padding:20px;width:min(720px,92vw)}
+dialog::backdrop{background:rgba(20,20,15,.45)}
+dialog h3{font-family:var(--display);font-weight:400;font-size:20px;margin:0 0 4px}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  body *{visibility:hidden}
+  #laudo,#laudo *{visibility:visible}
+  #laudo{position:absolute;left:0;top:0;border:0;padding:0;max-width:none;min-width:0;width:100%}
+  .top,.mbar,body::before{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="top-in">
+  <div class="brand">MOSAIC<small>Precificação de imóveis</small></div>
+  <div class="top-actions">
+    <select class="btn" id="abrir" aria-label="Abrir avaliação salva"><option value="">Avaliações salvas</option></select>
+    <button class="btn" id="btnNova">Nova avaliação</button>
+    <button class="btn" id="btnExemplo">Ver exemplo</button>
+    <button class="btn primary" id="btnSalvar">Salvar</button>
+  </div>
+</div></header>
+
+<main class="wrap">
+<div>
+
+  <section class="ai" id="ai" hidden>
+    <h2>Preencher com Claude</h2>
+    <p>Cole tudo de uma vez: o que copiou do Captei e das Transações da Pilar, os links dos anúncios e o que o proprietário pediu. Também dá para colar ou arrastar prints das telas. O Claude separa vendas e anúncios e preenche os passos abaixo.</p>
+    <textarea class="inp" id="aiTxt" placeholder="Ex.: Proprietário pede R$ 1.500.000. Apto de 62 m² na Rua Pintassilgo, 480, Vila Uberabinha, 2 quartos, 1 suíte, 1 vaga.&#10;&#10;Cole aqui as transações da Pilar e os anúncios do Captei (texto, links ou prints)."></textarea>
+    <div class="thumbs" id="aiThumbs"></div>
+    <div class="tbl-actions">
+      <label class="btn small" id="aiFileBtn" hidden>Adicionar prints<input type="file" id="aiFile" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden></label>
+      <button class="btn small primary" id="aiGo">Preencher com Claude</button>
+      <button class="btn small ghost" id="aiStop" hidden>Parar</button>
+      <span class="note" id="aiStatus" style="margin:0" role="status"></span>
+    </div>
+    <ul class="avisos" id="aiAvisos" hidden></ul>
+  </section>
+
+  <!-- 1 -->
+  <section class="step" id="imovel">
+    <div class="step-h"><span class="step-n">1</span><div class="grow"><h2>O imóvel</h2><p>Os dados que vão para o resumo do laudo.</p></div></div>
+    <div class="grid">
+      <div class="f wide"><label for="i-endereco">Endereço</label><input class="inp" id="i-endereco" data-k="endereco" placeholder="Rua Atibaia, 360"></div>
+      <div class="f"><label for="i-bairro">Bairro</label><input class="inp" id="i-bairro" data-k="bairro" placeholder="Perdizes"></div>
+      <div class="f"><label for="i-prop">Proprietário</label><input class="inp" id="i-prop" data-k="proprietario"></div>
+      <div class="f wide"><label>Tipo</label>
+        <div class="seg" id="tipoSeg"><button type="button" data-v="apartamento" aria-pressed="true">Apartamento</button><button type="button" data-v="casa" aria-pressed="false">Casa</button></div></div>
+      <div class="f"><label for="i-area">Área útil (m²)</label><input class="inp num" id="i-area" data-k="areaUtil" inputmode="decimal"></div>
+      <div class="f"><label for="i-terreno">Área do terreno (m²)</label><input class="inp num" id="i-terreno" data-k="areaTerreno" inputmode="decimal"></div>
+      <div class="f"><label for="i-dorms">Dormitórios</label><input class="inp num" id="i-dorms" data-k="dorms" inputmode="numeric"></div>
+      <div class="f"><label for="i-suites">Suítes</label><input class="inp num" id="i-suites" data-k="suites" inputmode="numeric"></div>
+      <div class="f"><label for="i-vagas">Vagas</label><input class="inp num" id="i-vagas" data-k="vagas" inputmode="numeric"></div>
+      <div class="f"><label for="i-iptu">IPTU</label><input class="inp" id="i-iptu" data-k="iptu" placeholder="R$ 1.321,50 (10x)"></div>
+      <div class="f"><label for="i-cond">Condomínio</label><input class="inp" id="i-cond" data-k="condominio" placeholder="R$"></div>
+      <div class="f"><label for="i-exp">Expectativa do proprietário</label><input class="inp num" id="i-exp" data-k="expectativa" inputmode="decimal" placeholder="R$"></div>
+      <div class="f full two-col" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 14px">
+        <div class="f"><label for="i-dif">Pontos de diferenciação</label><textarea class="inp" id="i-dif" data-k="diferenciais" placeholder="- localização residencial próxima ao comércio&#10;- planta bem resolvida&#10;- luz, ventilação"></textarea></div>
+        <div class="f"><label for="i-vul">Vulnerabilidades</label><textarea class="inp" id="i-vul" data-k="vulnerabilidades" placeholder="- reforma grande a ser realizada&#10;- área externa pequena"></textarea></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="step" id="transacoes">
+    <div class="step-h"><span class="step-n">2</span><div class="grow"><h2>Vendas registradas</h2><p>O que foi efetivamente pago. Copie de Transações na Pilar ou do ITBI da Prefeitura.</p></div></div>
+    <div class="params">
+      <div class="f"><label for="p-val">Valorização ao ano (%)</label><input class="inp num" id="p-val" data-p="valorizacao" inputmode="decimal"></div>
+      <p class="note" style="margin:0;flex:1;min-width:220px">Corrige o R$/m² das vendas antigas para hoje. Uma venda de 2023 com 5% ao ano vale cerca de 16% a mais em 2026.</p>
+    </div>
+    <div class="tbl-wrap"><table class="t">
+      <thead><tr><th>Usar</th><th>Data</th><th>Endereço / unidade</th><th class="num">Área ITBI m²</th><th class="num">Área útil m²</th><th class="num">Valor de venda</th><th class="num">R$/m² hoje</th><th></th></tr></thead>
+      <tbody id="txBody"></tbody>
+    </table></div>
+    <div class="tbl-actions">
+      <button class="btn small" data-add="tx">Adicionar venda</button>
+      <button class="btn small" data-import="tx">Colar da Pilar ou planilha</button>
+    </div>
+    <p class="note" id="txNote"></p>
+  </section>
+
+  <!-- 3 -->
+  <section class="step" id="anuncios">
+    <div class="step-h"><span class="step-n">3</span><div class="grow"><h2>Anúncios à venda</h2><p>A concorrência de hoje. O tempo de mercado vem do Captei.</p></div></div>
+    <div class="params">
+      <div class="f"><label for="p-desc">Desconto de negociação (%)</label><input class="inp num" id="p-desc" data-p="desconto" inputmode="decimal"></div>
+      <p class="note" style="margin:0;flex:1;min-width:220px">Diferença esperada entre o preço anunciado e o preço fechado. O cálculo usa o R$/m² do anúncio já com esse desconto.</p>
+    </div>
+    <div class="tbl-wrap"><table class="t">
+      <thead><tr><th>Usar</th><th>Endereço / código</th><th class="num">Área útil m²</th><th class="num">Preço anunciado</th><th class="num">Dias à venda</th><th>Link</th><th class="num">R$/m² anúncio</th><th>Tempo de mercado</th><th></th></tr></thead>
+      <tbody id="anBody"></tbody>
+    </table></div>
+    <div class="tbl-actions">
+      <button class="btn small" data-add="an">Adicionar anúncio</button>
+      <button class="btn small" data-import="an">Colar do Captei ou planilha</button>
+    </div>
+    <p class="note">Em “Dias à venda” você pode digitar o número de dias ou a data em que o anúncio entrou (ex.: 12/03/2025).</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="step" id="ajustes">
+    <div class="step-h"><span class="step-n">4</span><div class="grow"><h2>Ajustes do imóvel</h2><p>O que deixa este imóvel acima ou abaixo da média dos comparáveis.</p></div></div>
+    <div class="params" style="background:transparent;padding:0">
+      <div class="f" style="width:auto"><label>Base do cálculo</label>
+        <div class="seg" id="baseSeg"><button type="button" data-v="ambos">Vendas e anúncios</button><button type="button" data-v="anuncios">Só anúncios</button><button type="button" data-v="transacoes">Só vendas</button></div></div>
+      <div class="f" style="width:240px"><label for="p-cons">Estado de conservação</label>
+        <select class="inp" id="p-cons">
+          <option value="reformado">Reformado ou novo (+8%)</option>
+          <option value="bom">Bom (0%)</option>
+          <option value="regular">Precisa de pequena reforma (−8%)</option>
+          <option value="reforma">Reforma grande (−18%)</option>
+        </select></div>
+      <div class="f"><label for="p-margem">Margem no preço de anúncio (%)</label><input class="inp num" id="p-margem" data-p="margem" inputmode="decimal"></div>
+    </div>
+    <div class="tbl-wrap"><table class="t" style="min-width:420px">
+      <thead><tr><th>Ajuste</th><th class="num" style="width:120px">%</th><th style="width:40px"></th></tr></thead>
+      <tbody id="ajBody"></tbody>
+    </table></div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <!-- 5 -->
+  <section class="step" id="laudoSec">
+    <div class="step-h"><span class="step-n">5</span><div class="grow"><h2>Laudo para o proprietário</h2><p>No modelo Mosaic. Revise a conclusão e imprima ou salve em PDF.</p></div></div>
+    <div class="grid" style="margin-bottom:14px">
+      <div class="f full"><label for="i-concl">Conclusão</label><textarea class="inp" id="i-concl" style="min-height:110px"></textarea></div>
+      <div class="f wide"><label for="i-corr">Corretores (um por linha)</label><textarea class="inp" id="i-corr" data-k="corretores" style="min-height:64px" placeholder="Camila Raghi - Creci 180922F"></textarea></div>
+      <div class="f"><label for="i-data">Data do laudo</label><input class="inp" id="i-data" data-k="dataLaudo" type="date"></div>
+    </div>
+    <div class="tbl-actions" style="margin:0 0 14px">
+      <button class="btn small" id="btnRegen">Gerar conclusão de novo</button>
+      <button class="btn small primary" id="btnPrint">Imprimir ou salvar PDF</button>
+      <button class="btn small" id="btnCopyLaudo">Copiar laudo em texto</button>
+    </div>
+    <div class="laudo-wrap"><div class="laudo" id="laudo"></div></div>
+  </section>
+</div>
+
+<aside class="side" id="resultado">
+  <div class="res">
+    <h3>Valor de mercado estimado</h3>
+    <div class="big" id="rValor">—</div>
+    <div class="sub" id="rFaixa">Preencha a área e pelo menos um comparável.</div>
+    <div class="ruler" id="ruler"></div>
+    <dl class="kv" id="rKv"></dl>
+    <div class="sep"></div>
+    <h3 style="margin-bottom:10px">Argumentos para a conversa</h3>
+    <ul class="args" id="rArgs"><li>Os argumentos aparecem quando houver comparáveis.</li></ul>
+    <div id="aiAnBox" hidden>
+      <div class="sep"></div>
+      <h3>Parecer do Claude</h3>
+      <p class="sub" style="margin:2px 0 10px">Lê os comparáveis e escreve o parecer para você, a conclusão do laudo e a mensagem para o proprietário.</p>
+      <button class="btn small" id="aiAnalise">Pedir análise ao Claude</button>
+      <span class="note" id="aiAnStatus" role="status"></span>
+      <div class="parecer" id="aiParecer"></div>
+      <div class="f" id="aiMsgWrap" hidden style="margin-top:12px"><label for="aiMsg">Mensagem para o proprietário</label><textarea class="inp" id="aiMsg" style="min-height:180px"></textarea></div>
+    </div>
+    <div class="btns">
+      <button class="btn small primary" id="btnMsg">Copiar mensagem para o proprietário</button>
+    </div>
+  </div>
+</aside>
+</main>
+
+<div class="mbar"><span>Estimado</span><b id="mValor">—</b><a href="#resultado">Ver detalhes</a></div>
+
+<dialog id="dlg">
+  <h3 id="dlgT">Colar dados</h3>
+  <p class="note" id="dlgHelp" style="margin:0 0 10px"></p>
+  <textarea class="inp" id="dlgTxt" style="min-height:220px;font-size:13px" placeholder="Cole aqui as linhas copiadas"></textarea>
+  <p class="note" id="dlgPrev"></p>
+  <div class="tbl-actions" style="justify-content:flex-end">
+    <button class="btn" id="dlgCancel">Cancelar</button>
+    <button class="btn primary" id="dlgOk">Adicionar linhas</button>
+  </div>
+</dialog>
+<dialog id="dlgLogin" style="width:min(380px,92vw)">
+  <h3>Entrar</h3>
+  <p class="note" style="margin:0 0 12px">Para usar o Claude, digite a senha da Mosaic. Você só precisa fazer isso uma vez neste navegador.</p>
+  <input class="inp" id="loginSenha" type="password" autocomplete="current-password" aria-label="Senha">
+  <p class="note" id="loginErro" style="color:var(--bad)" role="alert"></p>
+  <div class="tbl-actions" style="justify-content:flex-end">
+    <button class="btn" id="loginCancel">Cancelar</button>
+    <button class="btn primary" id="loginOk">Entrar</button>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const KEY="mosaic-precificacao-v1";
+const CONS={reformado:8,bom:0,regular:-8,reforma:-18};
+const CONS_TXT={reformado:"reformado",bom:"bom",regular:"regular",reforma:"precisa de reforma"};
+const SUGEST=[["Vaga a mais que a média",3],["Andar alto ou vista",5],["Sem lazer no condomínio",-5],["Área externa pequena",-3],["Rua barulhenta",-5],["Planta muito procurada",4]];
+let uid=Date.now();
+const nid=()=>"r"+(uid++).toString(36);
+
+function blank(){
+  return {id:nid(),criado:new Date().toISOString(),
+    imovel:{endereco:"",bairro:"",proprietario:"",tipo:"apartamento",areaUtil:"",areaTerreno:"",dorms:"",suites:"",vagas:"",iptu:"",condominio:"",expectativa:"",diferenciais:"",vulnerabilidades:"",corretores:"",dataLaudo:hojeISO()},
+    params:{valorizacao:5,desconto:10,margem:5,base:"ambos",conservacao:"bom"},
+    tx:[],an:[],ajustes:[],conclusao:"",conclusaoEditada:false};
+}
+let S=blank();
+
+/* ---------- helpers ---------- */
+function hojeISO(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function num(v){
+  if(v===null||v===undefined) return NaN;
+  if(typeof v==="number") return v;
+  let s=String(v).replace(/R\$|m²|m2|\s|%/gi,"").trim();
+  if(!s) return NaN;
+  const neg=/^[-−]/.test(s); s=s.replace(/^[-−]/,"");
+  if(s.includes(",")) s=s.replace(/\./g,"").replace(",",".");
+  else if(/^\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,"");
+  let mult=1;
+  if(/mi(l(h(ão|ao|ões|oes))?)?$/i.test(s)){mult=1e6;s=s.replace(/mi.*$/i,"")}
+  else if(/k$/i.test(s)){mult=1e3;s=s.slice(0,-1)}
+  const n=parseFloat(s);
+  return isNaN(n)?NaN:(neg?-1:1)*n*mult;
+}
+function parseDate(s){
+  if(!s) return null; s=String(s).trim();
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(m){let y=+m[3]; if(y<100) y+=2000; const d=new Date(y,+m[2]-1,+m[1]); return isNaN(d)?null:d;}
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  return null;
+}
+function diasDe(v){
+  if(v===""||v==null) return null;
+  const d=parseDate(v);
+  if(d) return Math.max(0,Math.round((Date.now()-d.getTime())/864e5));
+  const n=num(v); return isNaN(n)?null:Math.round(n);
+}
+const brl=n=>isFinite(n)?n.toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}):"—";
+const brlM=n=>{if(!isFinite(n))return "—"; if(Math.abs(n)>=1e6) return "R$ "+(n/1e6).toLocaleString("pt-BR",{maximumFractionDigits:2})+" mi"; return "R$ "+Math.round(n/1e3).toLocaleString("pt-BR")+" mil"};
+const m2=n=>isFinite(n)?"R$ "+Math.round(n).toLocaleString("pt-BR")+"/m²":"—";
+const pct=n=>(n>0?"+":"")+n.toLocaleString("pt-BR",{maximumFractionDigits:1})+"%";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtNumInput=v=>{const n=num(v);return isNaN(n)?(v||""):n.toLocaleString("pt-BR",{maximumFractionDigits:2})};
+function quantile(arr,q){if(!arr.length)return NaN;const a=[...arr].sort((x,y)=>x-y);const p=(a.length-1)*q,lo=Math.floor(p),hi=Math.ceil(p);return a[lo]+(a[hi]-a[lo])*(p-lo)}
+const median=a=>quantile(a,.5);
+const round10k=n=>Math.round(n/1e4)*1e4;
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove("on"),2200)}
+const isApto=()=>S.imovel.tipo==="apartamento";
+function predioKey(str){
+  if(!str) return "";
+  const t=String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const re=/(?:^|[,·|\-–]\s*)(?:r|rua|av|avenida|al|alameda|trav|travessa|praca|pca|estr|estrada)\.?\s+([a-z][a-z .']*?)\s*,?\s*(?:n[o°º]?\.?\s*)?(\d+)/;
+  let m=t.match(re);
+  if(!m) m=t.match(/^\s*([a-z][a-z .']*?)\s*,\s*(?:n[o°º]?\.?\s*)?(\d+)/);
+  return m?m[1].replace(/\s+/g," ").trim()+"|"+m[2]:"";
+}
+function mesmoPredio(end){const a=predioKey(S.imovel.endereco),b=predioKey(end);return !!a&&a===b}
+function desdeTxt(a,c){const d=parseDate(a.dias);if(d)return "desde "+a.dias;return c.dias!=null?"há "+c.dias+" dias":""}
+
+/* ---------- calculations ---------- */
+function txCalc(t){
+  const v=num(t.valor), au=num(t.areaUtil), ai=num(t.areaItbi);
+  let area=NaN, fonte="";
+  const sa=num(S.imovel.areaUtil);
+  if(au>0){area=au;fonte="util"}
+  else if(isApto()&&sa>0&&mesmoPredio(t.endereco)){area=sa;fonte="predio"}
+  else if(ai>0 && !isApto()){area=ai;fonte="itbi"} else if(ai>0||isApto()){fonte="itbi-apto"}
+  const d=parseDate(t.data);
+  const anos=d?Math.max(0,(Date.now()-d.getTime())/(365.25*864e5)):0;
+  const fator=Math.pow(1+(num(S.params.valorizacao)||0)/100,anos);
+  const m=area>0&&v>0?v/area*fator:NaN;
+  return {m2:m,fonte,valor:v,valorHoje:v>0?v*fator:NaN,anos};
+}
+function anCalc(a){
+  const v=num(a.valor), ar=num(a.area);
+  const m=ar>0&&v>0?v/ar:NaN;
+  const desc=(num(S.params.desconto)||0)/100;
+  return {m2:m,m2Fech:m*(1-desc),dias:diasDe(a.dias)};
+}
+function tempoTag(d){
+  if(d==null) return ["mut","sem dado"];
+  if(d<=90) return ["ok","recente"];
+  if(d<=180) return ["warn","3 a 6 meses"];
+  if(d<=365) return ["bad","parado há "+Math.round(d/30)+" meses"];
+  const anos=d/365; return ["bad","parado há "+(anos<2?"mais de 1 ano":Math.floor(anos)+" anos")];
+}
+function ajusteTotal(){
+  let t=CONS[S.params.conservacao]||0;
+  S.ajustes.forEach(a=>{const n=num(a.pct); if(!isNaN(n)) t+=n});
+  return t;
+}
+function compute(){
+  const area=num(S.imovel.areaUtil);
+  const txs=S.tx.map(t=>({t,c:txCalc(t)}));
+  const ans=S.an.map(a=>({a,c:anCalc(a)}));
+  const txM=txs.filter(x=>x.t.usar&&isFinite(x.c.m2)).map(x=>x.c.m2);
+  const anM=ans.filter(x=>x.a.usar&&isFinite(x.c.m2Fech)).map(x=>x.c.m2Fech);
+  let pool=S.params.base==="anuncios"?anM:S.params.base==="transacoes"?txM:[...txM,...anM];
+  const aj=ajusteTotal();
+  const r={area,txs,ans,txM,anM,pool,aj,ok:false};
+  if(area>0&&pool.length){
+    r.ok=true;
+    r.base=median(pool); r.q1=quantile(pool,.25); r.q3=quantile(pool,.75);
+    if(pool.length<3){r.q1=r.base*.95;r.q3=r.base*1.05}
+    const f=1+aj/100;
+    r.valor=round10k(r.base*area*f); r.min=round10k(r.q1*area*f); r.max=round10k(r.q3*area*f);
+    if(r.min>r.valor) r.min=r.valor; if(r.max<r.valor) r.max=r.valor;
+    r.m2=r.valor/area;
+    r.anuncio=round10k(r.valor*(1+(num(S.params.margem)||0)/100));
+  }
+  const exp=num(S.imovel.expectativa);
+  if(exp>0&&area>0){r.exp=exp;r.expM2=exp/area}
+  return r;
+}
+
+/* ---------- arguments ---------- */
+function argumentos(r){
+  const out=[];
+  const txV=r.txs.filter(x=>x.t.usar&&x.c.valor>0).map(x=>x.c.valor);
+  const anAll=r.ans.filter(x=>x.a.usar&&isFinite(x.c.m2));
+  if(r.txM.length&&anAll.length){
+    const a=median(anAll.map(x=>x.c.m2)), t=median(r.txM);
+    const gap=(a/t-1)*100;
+    if(Math.abs(gap)>=3) out.push({t:`Nas vendas registradas, a mediana foi de ${m2(t)} (já corrigida para hoje). Os anúncios atuais pedem ${m2(a)}, ${Math.abs(gap).toFixed(0)}% ${gap>0?"acima":"abaixo"} do que o mercado efetivamente pagou.`});
+  }
+  if(txV.length>=2){
+    out.push({t:`As ${txV.length} vendas registradas no entorno ficaram entre ${brlM(Math.min(...txV))} e ${brlM(Math.max(...txV))}, com mediana de ${brlM(median(txV))}.`});
+  }
+  const comDias=anAll.filter(x=>x.c.dias!=null);
+  const parados=comDias.filter(x=>x.c.dias>180), recentes=comDias.filter(x=>x.c.dias<=180);
+  if(parados.length){
+    let t=`${parados.length} de ${comDias.length} anúncios comparáveis estão à venda há mais de 6 meses`;
+    const mp=median(parados.map(x=>x.c.m2));
+    t+=`, pedindo em média ${m2(mp)}`;
+    if(recentes.length){const mr=median(recentes.map(x=>x.c.m2)); if(mp>mr*1.02) t+=`, contra ${m2(mr)} dos que entraram há menos tempo. Preço acima do mercado faz o imóvel encalhar`;}
+    out.push({t:t+".",w:true});
+  }
+  let cand=null;
+  if(r.exp){
+    cand=comDias.filter(x=>x.c.dias>180&&num(x.a.valor)>0&&num(x.a.valor)<r.exp).sort((a,b)=>(mesmoPredio(b.a.endereco)-mesmoPredio(a.a.endereco))||(b.c.dias-a.c.dias))[0]||null;
+    if(cand){
+      const v=num(cand.a.valor), mp=mesmoPredio(cand.a.endereco), d=parseDate(cand.a.dias);
+      const quando=d?`desde ${d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}`:`há ${Math.round(cand.c.dias/30)} meses`;
+      out.push({t:`${mp?"No mesmo prédio, um imóvel":"Um imóvel comparável"} (${cand.a.endereco||"sem endereço"}${cand.a.area?", "+fmtNumInput(cand.a.area)+" m²":""}) está anunciado por ${brlM(v)} ${quando} e ainda não vendeu. A expectativa de ${brlM(r.exp)} fica ${((r.exp/v-1)*100).toFixed(0)}% acima de um preço que o mercado já não aceitou.`,w:true});
+    }
+  }
+  const longo=comDias.filter(x=>x.c.dias>365&&x!==cand).sort((a,b)=>b.c.dias-a.c.dias)[0];
+  if(longo) out.push({t:`Exemplo concreto: ${longo.a.endereco||"um imóvel comparável"} está anunciado por ${brlM(num(longo.a.valor))} ${desdeTxt(longo.a,longo.c)} e ainda não vendeu.`,w:true});
+  if(r.ok&&r.expM2){
+    const d=(r.exp/r.valor-1)*100;
+    if(d>5){
+      let t=`A expectativa de ${brlM(r.exp)} equivale a ${m2(r.expM2)}, ${d.toFixed(0)}% acima do valor estimado`;
+      const acima=comDias.filter(x=>x.c.m2>=r.expM2*0.95);
+      if(acima.length){const md=Math.round(median(acima.map(x=>x.c.dias))); t+=`. Os anúncios nessa faixa de preço estão à venda há, em média, ${md} dias`;}
+      const txAcima=r.txM.filter(v=>v>=r.expM2*0.95).length;
+      if(r.txM.length) t+=txAcima?`. ${txAcima} de ${r.txM.length} vendas registradas chegaram a esse patamar`:`. Nenhuma venda registrada chegou a esse patamar`;
+      out.push({t:t+".",w:true});
+    } else if(d<-5){
+      out.push({t:`A expectativa de ${brlM(r.exp)} está ${Math.abs(d).toFixed(0)}% abaixo do valor estimado. Vale mostrar ao proprietário que há espaço para pedir mais.`});
+    } else out.push({t:`A expectativa do proprietário (${brlM(r.exp)}) está alinhada com o mercado.`});
+  }
+  if(r.ok&&r.aj) out.push({t:`Os ajustes deste imóvel somam ${pct(r.aj)} sobre a média dos comparáveis (${ajustesTexto()}).`});
+  if(r.ok&&r.pool.length<3) out.push({t:"Poucos comparáveis no cálculo. Adicione mais vendas ou anúncios para a faixa ficar confiável.",w:true});
+  return out;
+}
+function ajustesTexto(){
+  const p=[`conservação ${CONS_TXT[S.params.conservacao]} ${pct(CONS[S.params.conservacao])}`];
+  S.ajustes.forEach(a=>{const n=num(a.pct); if(a.nome&&!isNaN(n)&&n) p.push(`${a.nome.toLowerCase()} ${pct(n)}`)});
+  return p.join(", ");
+}
+
+/* ---------- render tables ---------- */
+function inp(k,v,cls,ph){return `<input class="inp ${cls||""}" data-f="${k}" value="${esc(v)}" placeholder="${ph||""}" ${cls&&cls.includes("num")?'inputmode="decimal"':""}>`}
+function renderTx(){
+  const b=$("#txBody");
+  if(!S.tx.length){b.innerHTML=`<tr><td colspan="8" class="empty">Nenhuma venda ainda. Cole as transações do prédio ou da rua (Pilar → Transações) ou do ITBI.</td></tr>`;return}
+  b.innerHTML=S.tx.map(t=>`<tr data-id="${t.id}" data-list="tx" class="${t.usar?"":"off"}">
+    <td><input type="checkbox" data-f="usar" ${t.usar?"checked":""} aria-label="Usar no cálculo"></td>
+    <td style="width:110px">${inp("data",t.data,"","dd/mm/aaaa")}</td>
+    <td>${inp("endereco",t.endereco,"","Rua, nº, unidade")}</td>
+    <td style="width:100px">${inp("areaItbi",t.areaItbi,"num")}</td>
+    <td style="width:100px">${inp("areaUtil",t.areaUtil,"num","opcional")}</td>
+    <td style="width:140px">${inp("valor",t.valor,"num","R$")}</td>
+    <td class="calc" data-out="m2"></td>
+    <td><button class="x" data-del aria-label="Remover">×</button></td></tr>`).join("");
+}
+function renderAn(){
+  const b=$("#anBody");
+  if(!S.an.length){b.innerHTML=`<tr><td colspan="9" class="empty">Nenhum anúncio ainda. Busque no Captei imóveis com o mesmo perfil e cole aqui.</td></tr>`;return}
+  b.innerHTML=S.an.map(a=>`<tr data-id="${a.id}" data-list="an" class="${a.usar?"":"off"}">
+    <td><input type="checkbox" data-f="usar" ${a.usar?"checked":""} aria-label="Usar no cálculo"></td>
+    <td>${inp("endereco",a.endereco,"","Endereço ou código")}</td>
+    <td style="width:90px">${inp("area",a.area,"num")}</td>
+    <td style="width:140px">${inp("valor",a.valor,"num","R$")}</td>
+    <td style="width:110px">${inp("dias",a.dias,"num","dias ou data")}</td>
+    <td style="width:120px">${inp("link",a.link,"","https://")}</td>
+    <td class="calc" data-out="m2"></td>
+    <td data-out="tempo"></td>
+    <td><button class="x" data-del aria-label="Remover">×</button></td></tr>`).join("");
+}
+function renderAj(){
+  const b=$("#ajBody");
+  const cons=`<tr><td style="padding:10px 8px">Estado de conservação: ${CONS_TXT[S.params.conservacao]}</td><td class="calc">${pct(CONS[S.params.conservacao])}</td><td></td></tr>`;
+  b.innerHTML=cons+S.ajustes.map(a=>`<tr data-id="${a.id}" data-list="aj">
+    <td>${inp("nome",a.nome,"","Descreva o ajuste")}</td>
+    <td>${inp("pct",a.pct,"num","0")}</td>
+    <td><button class="x" data-del aria-label="Remover">×</button></td></tr>`).join("");
+  $("#chips").innerHTML=SUGEST.filter(s=>!S.ajustes.some(a=>a.nome===s[0])).map(s=>`<button class="chip" data-chip="${esc(s[0])}" data-pct="${s[1]}">+ ${esc(s[0])} (${pct(s[1])})</button>`).join("")+`<button class="chip" data-chip="" data-pct="">+ Outro ajuste</button>`;
+}
+function renderAll(){
+  $$("[data-k]").forEach(e=>{e.value=S.imovel[e.dataset.k]??""});
+  $$("[data-p]").forEach(e=>{e.value=S.params[e.dataset.p]??""});
+  $("#p-cons").value=S.params.conservacao;
+  $$("#tipoSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===S.imovel.tipo));
+  $$("#baseSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===S.params.base));
+  renderTx();renderAn();renderAj();update();
+}
+
+/* ---------- update outputs ---------- */
+function update(){
+  const r=compute();
+  // row outputs
+  r.txs.forEach(({t,c})=>{
+    const tr=document.querySelector(`tr[data-id="${t.id}"]`); if(!tr) return;
+    const cell=tr.querySelector('[data-out="m2"]');
+    if(c.fonte==="itbi-apto") cell.innerHTML=`<span class="tag mut" title="Em apartamentos a área do ITBI inclui áreas comuns. Informe a área útil para usar no cálculo.">falta área útil</span>`;
+    else if(c.fonte==="predio") cell.innerHTML=`${m2(c.m2)} <span class="tag ok" title="Mesmo prédio do imóvel avaliado: calculado com a área útil dele (mesma planta).">prédio</span>`;
+    else cell.textContent=m2(c.m2);
+  });
+  r.ans.forEach(({a,c})=>{
+    const tr=document.querySelector(`tr[data-id="${a.id}"]`); if(!tr) return;
+    tr.querySelector('[data-out="m2"]').textContent=m2(c.m2);
+    const [cls,txt]=tempoTag(c.dias);
+    tr.querySelector('[data-out="tempo"]').innerHTML=`<span class="tag ${cls}">${txt}</span>`+(mesmoPredio(a.endereco)?` <span class="tag ok">mesmo prédio</span>`:"");
+  });
+  const semUtil=r.txs.filter(x=>x.c.fonte==="itbi-apto").length, nPred=r.txs.filter(x=>x.c.fonte==="predio").length;
+  $("#txNote").textContent=(nPred?`${nPred} venda(s) no mesmo prédio usam a área útil do imóvel avaliado, como unidades de mesma planta. `:"")+(semUtil?`${semUtil} venda(s) sem área útil ficam fora do R$/m². Em apartamentos, a área do ITBI inclui áreas comuns e deixa o R$/m² artificialmente baixo. Os valores de venda continuam nos argumentos e no laudo.`:"");
+  // side
+  $("#rValor").textContent=r.ok?brl(r.valor):"—";
+  $("#mValor").textContent=r.ok?brlM(r.valor):"—";
+  $("#rFaixa").textContent=r.ok?`Faixa provável de ${brlM(r.min)} a ${brlM(r.max)}`:(r.area>0?"Adicione pelo menos um comparável com área e valor.":"Preencha a área útil e pelo menos um comparável.");
+  const kv=[];
+  if(r.ok){
+    kv.push(["Preço de anúncio sugerido",brl(r.anuncio),true]);
+    kv.push(["R$/m² do imóvel",m2(r.m2)]);
+    kv.push(["Mediana dos comparáveis",m2(r.base)]);
+    kv.push(["Ajustes",pct(r.aj)]);
+    kv.push(["Comparáveis no cálculo",`${r.pool.length} (${r.txM.length} vendas, ${r.anM.length} anúncios)`.replace(/\(.*\)/,S.params.base==="ambos"?`(${r.txM.length} vendas, ${r.anM.length} anúncios)`:S.params.base==="anuncios"?`(anúncios)`:`(vendas)`)]);
+  }
+  if(r.exp) kv.push(["Expectativa do proprietário",brl(r.exp)]);
+  $("#rKv").innerHTML=kv.map(([k,v,h])=>`<dt>${k}</dt><dd class="${h?"hl":""}">${v}</dd>`).join("");
+  const args=argumentos(r);
+  $("#rArgs").innerHTML=args.length?args.map(a=>`<li class="${a.w?"warn":""}">${esc(a.t)}</li>`).join(""):"<li>Os argumentos aparecem quando houver comparáveis.</li>";
+  drawRuler(r);
+  if(!S.conclusaoEditada){S.conclusao=conclusaoPadrao(r); const c=$("#i-concl"); if(document.activeElement!==c) c.value=S.conclusao;}
+  renderLaudo(r);
+  update.last=r;
+}
+
+/* ---------- ruler ---------- */
+function drawRuler(r){
+  const pts=[];
+  r.txs.forEach(({t,c})=>{if(isFinite(c.m2)) pts.push({v:c.m2,k:"tx",on:t.usar,label:t.endereco})});
+  r.ans.forEach(({a,c})=>{if(isFinite(c.m2)){const d=c.dias;pts.push({v:c.m2,k:d==null?"an":d<=90?"ok":d<=180?"warn":"bad",on:a.usar,label:a.endereco})}});
+  if(!pts.length){$("#ruler").innerHTML="";return}
+  const marks=[]; if(r.ok) marks.push({v:r.m2,t:"Estimado",c:"var(--olive)"}); if(r.expM2) marks.push({v:r.expM2,t:"Expectativa",c:"var(--bad)"});
+  const all=[...pts.map(p=>p.v),...marks.map(m=>m.v)];
+  let lo=Math.min(...all),hi=Math.max(...all); const pad=(hi-lo)*.08||lo*.1; lo-=pad; hi+=pad;
+  const W=340,H=160,L=8,R=8,x=v=>L+(v-lo)/(hi-lo)*(W-L-R);
+  const col={tx:"var(--tx)",ok:"var(--ok)",warn:"var(--warn)",bad:"var(--bad)",an:"var(--muted)"};
+  const rows={tx:52,an:94,ok:94,warn:94,bad:94};
+  // jitter collisions
+  const used={}; 
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Régua de R$ por m² dos comparáveis">`;
+  const hasTx=pts.some(p=>p.k==="tx"),hasAn=pts.some(p=>p.k!=="tx");
+  if(hasTx) svg+=`<text x="${L}" y="40" font-size="10" fill="var(--muted)">Vendas</text>`; if(hasAn) svg+=`<text x="${L}" y="80" font-size="10" fill="var(--muted)">Anúncios, por tempo à venda</text>`;
+  svg+=`<line x1="${L}" x2="${W-R}" y1="126" y2="126" stroke="var(--line)"/>`;
+  const ticks=4; for(let i=0;i<=ticks;i++){const v=lo+(hi-lo)*i/ticks;svg+=`<line x1="${x(v)}" x2="${x(v)}" y1="122" y2="130" stroke="var(--line)"/><text x="${x(v)}" y="144" font-size="10" text-anchor="${i===0?"start":i===ticks?"end":"middle"}" fill="var(--muted)">${(v/1000).toLocaleString("pt-BR",{maximumFractionDigits:1})} mil</text>`}
+  marks.forEach((m,i)=>{svg+=`<line x1="${x(m.v)}" x2="${x(m.v)}" y1="${i?28:16}" y2="122" stroke="${m.c}" stroke-width="1.5" ${i?'stroke-dasharray="3 3"':""}/><text x="${Math.min(Math.max(x(m.v),30),W-30)}" y="${i?24:12}" font-size="10.5" font-weight="600" text-anchor="middle" fill="${m.c}">${m.t}</text>`});
+  pts.forEach(p=>{const cx=x(p.v);const key=(p.k==="tx"?"t":"a")+Math.round(cx/6);used[key]=(used[key]||0)+1;const dy=((used[key]-1)%3)*7*(used[key]%2?1:-1);
+    svg+=`<circle cx="${cx}" cy="${rows[p.k]+dy}" r="5" fill="${col[p.k]}" fill-opacity="${p.on?.9:.25}" stroke="var(--bg)" stroke-width="1"><title>${esc(p.label||"")} · ${m2(p.v)}</title></circle>`});
+  svg+=`<text x="${W/2}" y="${H-2}" font-size="10" text-anchor="middle" fill="var(--muted)">R$ por m²</text></svg>`;
+  $("#ruler").innerHTML=svg+`<div class="legend"><span><i style="background:var(--tx)"></i>venda registrada</span><span><i style="background:var(--ok)"></i>até 3 meses</span><span><i style="background:var(--warn)"></i>3 a 6 meses</span><span><i style="background:var(--bad)"></i>mais de 6 meses</span></div>`;
+}
+
+/* ---------- laudo ---------- */
+function conclusaoPadrao(r){
+  const i=S.imovel, a=num(i.areaUtil), t=num(i.areaTerreno);
+  if(!r.ok) return "";
+  let s=`Após analisarmos a localização do imóvel, sua área ${isApto()?"útil":"construída"} de ${fmtNumInput(a)} m²`;
+  if(t>0) s+=`, o terreno de ${fmtNumInput(t)} m² (conforme IPTU)`;
+  s+=`, suas características e diferenciais, bem como os aspectos que podem impactar sua comercialização, além da comparação com imóveis ofertados e efetivamente negociados na região, concluímos que o valor de mercado estimado para a propriedade é de ${brl(r.valor)},00, dentro de uma faixa de ${brl(r.min)},00 a ${brl(r.max)},00.`;
+  return s;
+}
+function dataExtenso(iso){const d=parseDate(iso)||new Date();return d.toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"})}
+function bullets(s){return esc(s||"").trim()||"—"}
+function renderLaudo(r){
+  const i=S.imovel;
+  const txRows=r.txs.filter(x=>x.t.usar&&(x.c.valor>0)).map(({t,c})=>`<tr><td>${esc(t.data)}</td><td>${esc(t.endereco)}</td><td class="n">${t.areaUtil||t.areaItbi?fmtNumInput(t.areaUtil||t.areaItbi)+" m²":""}</td><td class="n">${brl(c.valor)}</td></tr>`).join("");
+  const anRows=r.ans.filter(x=>x.a.usar&&num(x.a.valor)>0).map(({a,c})=>{const tt=tempoTag(c.dias);return `<tr><td>${a.link?`<a href="${esc(a.link)}" target="_blank" rel="noopener" style="color:#3f6f8f">${esc(a.endereco||a.link)}</a>`:esc(a.endereco)}</td><td class="n">${a.area?fmtNumInput(a.area)+" m²":""}</td><td class="n">${brl(num(a.valor))}</td><td class="n">${isFinite(c.m2)?m2(c.m2):""}</td><td class="n">${desdeTxt(a,c)}</td></tr>`}).join("");
+  const corr=(i.corretores||"").split("\n").filter(Boolean).map(esc).join("<br>");
+  $("#laudo").innerHTML=`
+  <div class="lhead"><div>PROPRIETÁRIO</div><div>${esc(i.proprietario)}</div><div>ENDEREÇO</div><div>${esc(i.endereco)}${i.bairro?" · "+esc(i.bairro):""}</div></div>
+  <div class="ltitle"><h1>AVALIAÇÃO</h1><span class="logo">MOSAIC</span></div>
+  <div class="resumo"><div>RESUMO</div>
+    <div>ÁREA ÚTIL: ${i.areaUtil?fmtNumInput(i.areaUtil)+"m²":"—"}<br>DORMS: ${esc(i.dorms||"—")}${i.suites?` (${esc(i.suites)} suítes)`:""}<br>VAGAS: ${esc(i.vagas||"—")}</div>
+    <div>${i.areaTerreno?`ÁREA TERRENO: ${fmtNumInput(i.areaTerreno)}m²<br>`:""}${i.iptu?`IPTU: ${esc(i.iptu)}<br>`:""}${i.condominio?`CONDOMÍNIO: ${esc(i.condominio)}<br>`:""}ESTADO DE CONSERVAÇÃO: ${CONS_TXT[S.params.conservacao]}</div></div>
+  <div class="two">
+    <div><div class="bar">PONTOS DE DIFERENCIAÇÃO</div><div class="box"><pre>${bullets(i.diferenciais)}</pre></div></div>
+    <div><div class="bar">VULNERABILIDADES</div><div class="box"><pre>${bullets(i.vulnerabilidades)}</pre></div></div>
+  </div>
+  <div class="bar" style="display:flex;justify-content:space-between;align-items:center;text-align:left"><span class="src">FONTE: PREFEITURA DE SÃO PAULO / ITBI · PILAR</span><span>ÚLTIMAS TRANSAÇÕES REALIZADAS NO ENTORNO</span><span style="width:120px"></span></div>
+  <div class="box">${txRows?`<table><thead><tr><th>Data</th><th>Endereço</th><th class="n">Área</th><th class="n">Valor de venda</th></tr></thead><tbody>${txRows}</tbody></table>`:"—"}</div>
+  <div class="bar">ANÚNCIOS EXISTENTES</div>
+  <div class="box">${anRows?`<table><thead><tr><th>Imóvel</th><th class="n">Área</th><th class="n">Preço anunciado</th><th class="n">R$/m²</th><th class="n">À venda</th></tr></thead><tbody>${anRows}</tbody></table>`:"—"}</div>
+  <div class="bar">CONCLUSÃO</div>
+  <div class="box concl"><pre>${esc(S.conclusao)||"—"}</pre>${corr?`<p style="margin:16px 0 0">${corr}</p>`:""}</div>
+  <div class="foot"><span>SÃO PAULO, ${dataExtenso(i.dataLaudo).toUpperCase()}</span><span>MOSAIC HOMES</span></div>`;
+}
+function laudoTexto(){
+  const r=update.last||compute(), i=S.imovel;
+  let t=`AVALIAÇÃO · MOSAIC HOMES\n${i.endereco}${i.bairro?" – "+i.bairro:""}\n\n`;
+  t+=`Área útil: ${i.areaUtil||"—"} m²`+(i.areaTerreno?` · Terreno: ${i.areaTerreno} m²`:"")+` · Dorms: ${i.dorms||"—"}${i.suites?` (${i.suites} suítes)`:""} · Vagas: ${i.vagas||"—"}\n`;
+  if(i.diferenciais) t+=`\nPONTOS DE DIFERENCIAÇÃO\n${i.diferenciais}\n`;
+  if(i.vulnerabilidades) t+=`\nVULNERABILIDADES\n${i.vulnerabilidades}\n`;
+  const tx=r.txs.filter(x=>x.t.usar&&x.c.valor>0); if(tx.length) t+=`\nTRANSAÇÕES NO ENTORNO\n`+tx.map(({t:x,c})=>`${x.data} – ${x.endereco} – ${brl(c.valor)}`).join("\n")+"\n";
+  const an=r.ans.filter(x=>x.a.usar&&num(x.a.valor)>0); if(an.length) t+=`\nANÚNCIOS EXISTENTES\n`+an.map(({a,c})=>`${a.endereco} – ${brl(num(a.valor))}${c.dias!=null?` – à venda ${desdeTxt(a,c)}`:""}${a.link?` – ${a.link}`:""}`).join("\n")+"\n";
+  t+=`\nCONCLUSÃO\n${S.conclusao}\n\n${i.corretores||""}\nSão Paulo, ${dataExtenso(i.dataLaudo)}`;
+  return t;
+}
+function mensagem(){
+  const r=update.last||compute(), i=S.imovel;
+  if(!r.ok) return "";
+  const nome=(i.proprietario||"").split(" ")[0];
+  let t=`Olá${nome?", "+nome:""}! Tudo bem?\n\nTerminei o estudo de mercado do seu imóvel${i.endereco?" na "+i.endereco:""}. Comparei com vendas registradas em cartório no entorno e com os anúncios que estão à venda hoje.\n\n`;
+  t+=`Pelo que o mercado está pagando, o valor estimado é de ${brl(r.valor)}, numa faixa de ${brlM(r.min)} a ${brlM(r.max)}.\n\n`;
+  const args=argumentos(r).filter(a=>!/Poucos comparáveis|ajustes deste imóvel/i.test(a.t)).slice(0,3);
+  if(args.length) t+=`Alguns pontos que pesaram:\n`+args.map(a=>"• "+a.t).join("\n")+"\n\n";
+  t+=`Sugiro anunciar por ${brl(r.anuncio)}, o que deixa espaço para negociação sem afastar compradores. Posso te enviar o laudo completo?`;
+  return t;
+}
+async function copiar(txt,ok){
+  if(!txt){toast("Preencha o imóvel e os comparáveis primeiro");return}
+  try{await navigator.clipboard.writeText(txt);toast(ok)}
+  catch(e){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(ok)}catch(_){toast("Não foi possível copiar. Selecione o texto manualmente.")}ta.remove()}
+}
+
+/* ---------- import ---------- */
+let importTarget="tx";
+const HELP={
+  tx:"Copie as linhas de Transações na Pilar, do ITBI ou de uma planilha e cole aqui. Com a linha de cabeçalho, as colunas são reconhecidas sozinhas (Data, Rua, Número, Complemento, Área, Valor). Sem cabeçalho, use a ordem: data, endereço, área, valor.",
+  an:"Copie os anúncios do Captei ou de uma planilha e cole aqui. Com cabeçalho, as colunas são reconhecidas sozinhas (Endereço ou Código, Área, Valor, Dias ou Data de entrada, Link). Sem cabeçalho, use a ordem: endereço, área, valor, dias à venda, link."
+};
+function splitLine(l){return l.includes("\t")?l.split("\t"):l.includes(";")?l.split(";"):l.split(/\s{2,}|\|/)}
+function parseImport(text,target){
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  if(!lines.length) return [];
+  const first=splitLine(lines[0]).map(c=>c.trim().toLowerCase());
+  const hasHeader=first.some(c=>/data|rua|endere|valor|pre[çc]o|área|area/.test(c))&&!first.some(c=>/\d{2}\/\d{2}\/\d{2}|r\$\s*\d/.test(c));
+  let map={};
+  const find=(re,excl)=>first.findIndex((c,i)=>re.test(c)&&!(excl&&excl.test(c))&&!Object.values(map).includes(i));
+  if(hasHeader){
+    if(target==="tx"){
+      map.data=find(/^data|dt\b/); map.valor=find(/valor|pre[çc]o/); map.areaUtil=find(/[úu]til|privativ/);
+      map.areaItbi=find(/constru/); if(map.areaItbi<0) map.areaItbi=find(/[áa]rea/,/terreno/);
+      map.rua=find(/rua|endere|logradouro/); map.numero=find(/^n[úu]mero|^n[º°o]\.?$|^num/); map.compl=find(/compl|unidade|apto/);
+    } else {
+      map.endereco=find(/endere|rua|logradouro|t[íi]tulo|im[óo]vel/); map.codigo=find(/c[óo]digo|ref/);
+      map.area=find(/[úu]til|privativ/); if(map.area<0) map.area=find(/[áa]rea|m²|m2/,/terreno|total/);
+      map.valor=find(/valor|pre[çc]o/,/m²|m2|cond|iptu/); map.dias=find(/dias|tempo/); map.entrada=find(/entrada|publica|anunciad|cadastr|data/);
+      map.link=find(/link|url/);
+    }
+  }
+  const body=hasHeader?lines.slice(1):lines;
+  const get=(cells,k)=>map[k]!=null&&map[k]>=0?(cells[map[k]]||"").trim():"";
+  return body.map(l=>{
+    const c=splitLine(l).map(x=>x.trim());
+    const link=(l.match(/https?:\/\/\S+/)||[""])[0];
+    if(target==="tx"){
+      if(hasHeader) return {id:nid(),usar:true,data:get(c,"data"),endereco:[get(c,"rua"),get(c,"numero"),get(c,"compl")].filter(Boolean).join(", "),areaItbi:get(c,"areaItbi"),areaUtil:get(c,"areaUtil"),valor:get(c,"valor")};
+      if(c.length>=5) return {id:nid(),usar:true,data:c[0],endereco:c[1],areaItbi:c[2],areaUtil:c[3],valor:c[4]};
+      return {id:nid(),usar:true,data:c[0]||"",endereco:c[1]||"",areaItbi:c[2]||"",areaUtil:"",valor:c[3]||""};
+    } else {
+      if(hasHeader){const end=[get(c,"codigo"),get(c,"endereco")].filter(Boolean).join(" · ");return {id:nid(),usar:true,endereco:end,area:get(c,"area"),valor:get(c,"valor"),dias:get(c,"dias")||get(c,"entrada"),link:get(c,"link")||link}}
+      return {id:nid(),usar:true,endereco:c[0]||"",area:c[1]||"",valor:c[2]||"",dias:c[3]||"",link:c[4]||link};
+    }
+  }).filter(r=>target==="tx"?(num(r.valor)>0):(num(r.valor)>0||r.endereco));
+}
+function openImport(t){
+  importTarget=t; $("#dlgT").textContent=t==="tx"?"Colar vendas registradas":"Colar anúncios";
+  $("#dlgHelp").textContent=HELP[t]; $("#dlgTxt").value=""; $("#dlgPrev").textContent="";
+  try{$("#dlg").showModal()}catch(e){$("#dlg").setAttribute("open","")}
+  setTimeout(()=>$("#dlgTxt").focus(),30);
+}
+$("#dlgTxt").addEventListener("input",()=>{const n=parseImport($("#dlgTxt").value,importTarget).length;$("#dlgPrev").textContent=n?`${n} linha(s) reconhecida(s).`:"Nenhuma linha com valor reconhecida ainda."});
+$("#dlgCancel").onclick=()=>$("#dlg").close();
+$("#dlgOk").onclick=()=>{
+  const rows=parseImport($("#dlgTxt").value,importTarget);
+  if(!rows.length){toast("Nenhuma linha com valor reconhecida");return}
+  S[importTarget].push(...rows); $("#dlg").close();
+  importTarget==="tx"?renderTx():renderAn(); update(); toast(`${rows.length} linha(s) adicionada(s)`);
+};
+
+/* ---------- events ---------- */
+$$("[data-k]").forEach(e=>e.addEventListener("input",()=>{S.imovel[e.dataset.k]=e.value;update()}));
+$$("[data-p]").forEach(e=>e.addEventListener("input",()=>{S.params[e.dataset.p]=e.value;update()}));
+$("#p-cons").addEventListener("change",e=>{S.params.conservacao=e.target.value;renderAj();update()});
+$("#tipoSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.imovel.tipo=b.dataset.v;$$("#tipoSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));update()});
+$("#baseSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.params.base=b.dataset.v;$$("#baseSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));update()});
+$("#i-concl").addEventListener("input",e=>{S.conclusao=e.target.value;S.conclusaoEditada=true;renderLaudo(update.last||compute())});
+$("#btnRegen").onclick=()=>{S.conclusaoEditada=false;$("#i-concl").value="";update();$("#i-concl").value=S.conclusao};
+
+const listOf=k=>k==="aj"?S.ajustes:S[k];
+document.addEventListener("input",e=>{
+  const f=e.target.dataset.f, tr=e.target.closest("tr[data-id]"); if(!f||!tr) return;
+  const row=listOf(tr.dataset.list).find(r=>r.id===tr.dataset.id); if(!row) return;
+  row[f]=e.target.type==="checkbox"?e.target.checked:e.target.value;
+  if(f==="usar") tr.classList.toggle("off",!row.usar);
+  update();
+});
+document.addEventListener("change",e=>{
+  const f=e.target.dataset.f; if(!f||f==="usar") return;
+  if(["valor","areaItbi","areaUtil","area"].includes(f)&&e.target.value){e.target.value=fmtNumInput(e.target.value);const tr=e.target.closest("tr[data-id]");const row=listOf(tr.dataset.list).find(r=>r.id===tr.dataset.id);if(row)row[f]=e.target.value}
+});
+document.addEventListener("click",e=>{
+  const del=e.target.closest("[data-del]");
+  if(del){const tr=del.closest("tr[data-id]");const k=tr.dataset.list;const arr=listOf(k);arr.splice(arr.findIndex(r=>r.id===tr.dataset.id),1);k==="tx"?renderTx():k==="an"?renderAn():renderAj();update();return}
+  const add=e.target.closest("[data-add]");
+  if(add){const k=add.dataset.add;S[k].push(k==="tx"?{id:nid(),usar:true,data:"",endereco:"",areaItbi:"",areaUtil:"",valor:""}:{id:nid(),usar:true,endereco:"",area:"",valor:"",dias:"",link:""});k==="tx"?renderTx():renderAn();update();const rows=$$(`#${k==="tx"?"txBody":"anBody"} tr`);const last=rows[rows.length-1];last&&last.querySelector("input.inp")?.focus();return}
+  const imp=e.target.closest("[data-import]"); if(imp){openImport(imp.dataset.import);return}
+  const chip=e.target.closest("[data-chip]");
+  if(chip){S.ajustes.push({id:nid(),nome:chip.dataset.chip,pct:chip.dataset.pct});renderAj();update();if(!chip.dataset.chip){const r=$$("#ajBody tr");r[r.length-1].querySelector("input").focus()}}
+});
+
+$("#btnPrint").onclick=()=>{try{window.print()}catch(e){toast("Use Ctrl+P (ou Cmd+P) para imprimir o laudo")}};
+$("#btnCopyLaudo").onclick=()=>copiar(laudoTexto(),"Laudo copiado");
+$("#btnMsg").onclick=()=>{const m=!$("#aiMsgWrap").hidden&&$("#aiMsg").value.trim();copiar(m||mensagem(),"Mensagem copiada. Cole no WhatsApp ou e-mail")};
+
+/* ---------- storage ---------- */
+function lerSalvas(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return []}}
+function gravarSalvas(l){try{localStorage.setItem(KEY,JSON.stringify(l));return true}catch(e){return false}}
+function listarSalvas(){
+  const l=lerSalvas().sort((a,b)=>(b.salvo||"").localeCompare(a.salvo||""));
+  $("#abrir").innerHTML=`<option value="">${l.length?"Avaliações salvas ("+l.length+")":"Nenhuma avaliação salva"}</option>`+l.map(a=>`<option value="${a.id}">${esc(a.imovel.endereco||"Sem endereço")}</option>`).join("");
+}
+$("#btnSalvar").onclick=()=>{
+  const l=lerSalvas().filter(a=>a.id!==S.id); S.salvo=new Date().toISOString(); l.push(JSON.parse(JSON.stringify(S)));
+  if(gravarSalvas(l)){listarSalvas();$("#abrir").value=S.id;toast("Avaliação salva neste navegador")} else toast("Não foi possível salvar neste navegador");
+};
+$("#abrir").onchange=e=>{const a=lerSalvas().find(x=>x.id===e.target.value);if(a){S=Object.assign(blank(),a);renderAll();$("#i-concl").value=S.conclusao;window.scrollTo(0,0);toast("Avaliação aberta")}};
+$("#btnNova").onclick=()=>{S=blank();renderAll();$("#i-concl").value="";$("#abrir").value="";window.scrollTo(0,0)};
+
+/* ---------- example ---------- */
+$("#btnExemplo").onclick=()=>{
+  S=blank();
+  Object.assign(S.imovel,{endereco:"Rua Pintassilgo, 480",bairro:"Vila Uberabinha",proprietario:"",tipo:"apartamento",areaUtil:"62",dorms:"2",suites:"1",vagas:"1",iptu:"R$ 183,00",condominio:"R$ 1.244,00",expectativa:"1.500.000",
+    diferenciais:"",vulnerabilidades:"",corretores:""});
+  const tx=[["20/8/2026","R PINTASSILGO, 480, AP 76","112","750.000"],["1/4/2026","R PINTASSILGO, 480, AP 113","114","650.000"],["8/12/2025","R PINTASSILGO, 480, AP 143","114","830.000"],["26/5/2025","R PINTASSILGO, 480, AP 102","112","770.000"],["13/2/2025","R PINTASSILGO, 480, AP 12","112","690.000"],["15/7/2024","R PINTASSILGO, 480, AP 94","114","820.000"],["29/5/2024","R PINTASSILGO, 480, AP 35","112","790.000"],["15/4/2024","R PINTASSILGO, 480, AP 85","112","790.000"],["1/2/2024","R PINTASSILGO, 480, AP 36 3 ANDAR","112","800.000"],["15/1/2024","R PINTASSILGO, 480, AP 84 E VG.","114","620.000"],["8/11/2023","R PINTASSILGO, 480, AP 134","114","540.000"],["3/1/2023","R PINTASSILGO, 480, AP 124","114","1.005.000"],["18/11/2022","R PINTASSILGO, 480, AP 131 13 ANDAR","112","730.000"]];
+  S.tx=tx.map(r=>({id:nid(),usar:true,data:r[0],endereco:r[1],areaItbi:r[2],areaUtil:"",valor:r[3]}));
+  S.an=[{id:nid(),usar:true,endereco:"Rua Pintassilgo, 480 - Vila Uberabinha (Adriano Silva Imóveis)",area:"62",valor:"1.250.000",dias:"28/04/2022",link:""}];
+  renderAll(); $("#i-concl").value=S.conclusao; window.scrollTo(0,0);
+  toast("Exemplo carregado: Rua Pintassilgo, 480");
+};
+
+/* ---------- Claude ---------- */
+let sample=null, imgs=[], maxImgs=5, ctlAi=null;
+const ERR={not_granted:"Você não permitiu o uso do Claude nesta página.",rate_limited:"Muitos pedidos seguidos. Espere um minuto e tente de novo.",cancelled:"Cancelado.",images_unavailable:"Prints não estão disponíveis aqui. Cole o texto.",image_rejected:"Um dos prints não pôde ser lido. Use PNG ou JPG."};
+const errMsg=e=>(e&&e.code==="site"&&e.message)||ERR[e&&e.code]||"O Claude não conseguiu responder agora. Tente de novo em instantes.";
+function renderThumbs(){
+  $("#aiThumbs").innerHTML=imgs.map((b,i)=>`<figure><img src="${URL.createObjectURL(b)}" alt="Print ${i+1}"><button data-rmimg="${i}" aria-label="Remover print">×</button></figure>`).join("");
+}
+function addImgs(files){
+  if($("#aiFileBtn").hidden) return;
+  for(const f of files){ if(f&&f.type&&f.type.startsWith("image/")&&imgs.length<maxImgs) imgs.push(f); }
+  renderThumbs();
+}
+$("#aiThumbs").addEventListener("click",e=>{const b=e.target.closest("[data-rmimg]");if(b){imgs.splice(+b.dataset.rmimg,1);renderThumbs()}});
+$("#aiFile").addEventListener("change",e=>{addImgs(e.target.files);e.target.value=""});
+$("#aiTxt").addEventListener("paste",e=>{const fs=[...(e.clipboardData?.files||[])].filter(f=>f.type.startsWith("image/"));if(fs.length){e.preventDefault();addImgs(fs)}});
+const aiBox=$("#ai");
+aiBox.addEventListener("dragover",e=>{e.preventDefault();aiBox.classList.add("drag")});
+aiBox.addEventListener("dragleave",()=>aiBox.classList.remove("drag"));
+aiBox.addEventListener("drop",e=>{e.preventDefault();aiBox.classList.remove("drag");addImgs(e.dataTransfer.files)});
+
+function promptExtracao(txt){
+  return `Você ajuda corretores da Mosaic Homes (imobiliária de alto padrão em São Paulo) a montar a avaliação de um imóvel. Hoje é ${new Date().toLocaleDateString("pt-BR")}.
+O corretor colou abaixo o material que juntou${imgs.length?" e anexou "+imgs.length+" print(s) de tela":""}. Pode conter:
+- Transações / vendas registradas (Pilar "Transações", ITBI da Prefeitura, cartório): vendas que já aconteceram, com data, endereço, área e valor de venda. A área desses registros é a área do ITBI (em apartamentos inclui áreas comuns).
+- Anúncios à venda (Captei, portais, minisites): imóveis ofertados hoje, com preço anunciado, área útil, data em que o anúncio entrou (no Captei aparece no canto do card), anunciante e link.
+- Dados do imóvel avaliado e o valor que o proprietário pede (expectativa).
+
+Extraia tudo e responda APENAS com um objeto JSON, sem texto antes ou depois, neste formato:
+{
+ "imovel": {"endereco": string|null, "bairro": string|null, "tipo": "apartamento"|"casa"|null, "areaUtil": number|null, "areaTerreno": number|null, "dorms": number|null, "suites": number|null, "vagas": number|null, "iptu": string|null, "condominio": string|null, "expectativa": number|null},
+ "transacoes": [{"data": "dd/mm/aaaa", "endereco": string, "areaItbi": number|null, "areaUtil": number|null, "valor": number}],
+ "anuncios": [{"endereco": string, "area": number|null, "valor": number|null, "dataAnuncio": "dd/mm/aaaa"|null, "dias": number|null, "link": string|null, "anunciante": string|null}],
+ "avisos": [string]
+}
+Regras:
+- Valores em reais como número inteiro (R$ 1.250.000,00 → 1250000). Áreas em m² como número.
+- Nunca invente dados. Campo que não aparece fica null. Não repita o mesmo registro.
+- O "imovel" é o imóvel que está sendo avaliado (o do proprietário), não um comparável. Se o corretor disser que é igual ou do mesmo prédio que um anúncio, use as características desse anúncio.
+- Se houver um link sem os dados do anúncio, você não consegue abri-lo: coloque o link em "anuncios" com os outros campos null e explique em "avisos" que o corretor precisa colar os dados ou um print desse anúncio.
+- Em "avisos", em português e curto, aponte só o que o corretor precisa conferir (ex.: data ilegível, área ausente). Lista vazia se estiver tudo certo.
+
+Material do corretor:
+"""
+${txt||"(sem texto, só prints)"}
+"""`;
+}
+function applyExtract(d){
+  let nTx=0,nAn=0,nIm=0;
+  if(d&&d.imovel){for(const [k,v] of Object.entries(d.imovel)){
+    if(v===null||v===undefined||v===""||!(k in S.imovel)) continue;
+    if(k==="tipo"){if(v==="casa"||v==="apartamento"){S.imovel.tipo=v;nIm++}continue}
+    S.imovel[k]=typeof v==="number"&&["expectativa"].includes(k)?v.toLocaleString("pt-BR"):String(v); nIm++;
+  }}
+  const seen=new Set(S.tx.map(t=>predioKey(t.endereco)+(t.endereco||"").toLowerCase()+num(t.valor)+t.data));
+  (d&&d.transacoes||[]).forEach(t=>{
+    if(!(t&&t.valor>0)) return; const key=predioKey(t.endereco)+(t.endereco||"").toLowerCase()+t.valor+t.data; if(seen.has(key)) return; seen.add(key);
+    S.tx.push({id:nid(),usar:true,data:t.data||"",endereco:t.endereco||"",areaItbi:t.areaItbi?String(t.areaItbi):"",areaUtil:t.areaUtil?String(t.areaUtil):"",valor:Number(t.valor).toLocaleString("pt-BR")});nTx++;
+  });
+  (d&&d.anuncios||[]).forEach(a=>{
+    if(!a) return;
+    const end=[a.endereco,a.anunciante?`(${a.anunciante})`:""].filter(Boolean).join(" ");
+    if(S.an.some(x=>(x.link&&a.link&&x.link===a.link)||(x.endereco===end&&num(x.valor)===a.valor))) return;
+    S.an.push({id:nid(),usar:!!(a.valor&&a.area),endereco:end,area:a.area?String(a.area):"",valor:a.valor?Number(a.valor).toLocaleString("pt-BR"):"",dias:a.dataAnuncio||(a.dias!=null?String(a.dias):""),link:a.link||""});nAn++;
+  });
+  renderAll(); if(!S.conclusaoEditada) $("#i-concl").value=S.conclusao;
+  const av=(d&&d.avisos||[]).filter(Boolean);
+  $("#aiAvisos").hidden=!av.length; $("#aiAvisos").innerHTML=av.map(a=>`<li>${esc(a)}</li>`).join("");
+  return `Preenchido: ${nIm?"dados do imóvel, ":""}${nTx} venda(s) e ${nAn} anúncio(s). Confira abaixo.`;
+}
+$("#aiGo").onclick=async()=>{
+  const txt=$("#aiTxt").value.trim();
+  if(!txt&&!imgs.length){toast("Cole o material ou adicione um print primeiro");return}
+  ctlAi=new AbortController(); $("#aiGo").disabled=true; $("#aiStop").hidden=false;
+  $("#aiStatus").textContent="O Claude está lendo o material…";
+  try{
+    const d=await sample.json(promptExtracao(txt),{images:imgs.length?imgs:undefined,signal:ctlAi.signal,cache:false});
+    $("#aiStatus").textContent=applyExtract(d);
+    $("#aiTxt").value=""; imgs=[]; renderThumbs();
+  }catch(e){$("#aiStatus").textContent=errMsg(e)}
+  finally{$("#aiGo").disabled=false;$("#aiStop").hidden=true}
+};
+$("#aiStop").onclick=()=>ctlAi&&ctlAi.abort();
+
+$("#aiAnalise").onclick=async()=>{
+  const r=update.last||compute();
+  if(!r.ok){toast("Preencha a área e os comparáveis primeiro");return}
+  const dados={hoje:new Date().toLocaleDateString("pt-BR"),imovel:S.imovel,estadoConservacao:CONS_TXT[S.params.conservacao],
+    resultado:{valorEstimado:r.valor,faixaMin:r.min,faixaMax:r.max,precoAnuncioSugerido:r.anuncio,m2Imovel:Math.round(r.m2),medianaComparaveisM2:Math.round(r.base),ajustesPct:r.aj,ajustes:ajustesTexto(),descontoNegociacaoPct:num(S.params.desconto),valorizacaoAnualPct:num(S.params.valorizacao)},
+    vendasRegistradas:r.txs.filter(x=>x.t.usar&&x.c.valor>0).map(({t,c})=>({data:t.data,endereco:t.endereco,valor:c.valor,valorCorrigidoHoje:Math.round(c.valorHoje),m2Hoje:isFinite(c.m2)?Math.round(c.m2):null,mesmoPredio:mesmoPredio(t.endereco)})),
+    anuncios:r.ans.filter(x=>x.a.usar&&num(x.a.valor)>0).map(({a,c})=>({endereco:a.endereco,valor:num(a.valor),area:num(a.area)||null,m2Anuncio:isFinite(c.m2)?Math.round(c.m2):null,aVenda:desdeTxt(a,c)||null,dias:c.dias,link:a.link||null,mesmoPredio:mesmoPredio(a.endereco)})),
+    fatosCalculados:argumentos(r).map(a=>a.t)};
+  const prompt=`Você é um avaliador sênior da Mosaic Homes, imobiliária boutique de alto padrão em São Paulo. Abaixo está a avaliação que um corretor montou, com vendas registradas (ITBI/Pilar), anúncios à venda (Captei) e o cálculo da ferramenta. Use SOMENTE esses dados; não invente números, endereços ou fatos.
+
+Responda APENAS com um objeto JSON, sem texto fora dele:
+{"parecer": string, "conclusao": string, "mensagem": string}
+
+- "parecer": para o corretor, de 3 a 5 frases diretas. O valor que o proprietário pede faz sentido? Qual é o argumento mais forte para a conversa (por exemplo, um anúncio igual parado há anos por um preço menor, ou o que as vendas registradas mostram)? Aponte limitações dos dados se houver (poucos comparáveis, áreas do ITBI, vendas antigas).
+- "conclusao": um parágrafo formal para o laudo, no estilo: "Após analisarmos a localização do imóvel, sua área..., suas características e diferenciais, bem como os aspectos que podem impactar sua comercialização, além da comparação com imóveis ofertados e efetivamente negociados na região, concluímos que o valor de mercado estimado para a propriedade é de R$ X,00." Pode mencionar a faixa.
+- "mensagem": para o corretor mandar por WhatsApp ao proprietário. Cordial, em português do Brasil, sem jargão, até 120 palavras. Cite 2 ou 3 fatos concretos dos dados (vendas registradas no prédio ou na região, anúncios parados e há quanto tempo). Sugira o preço de anúncio. Termine oferecendo enviar o laudo e os links dos anúncios para ele conferir. ${S.imovel.proprietario?"Chame o proprietário pelo primeiro nome: "+S.imovel.proprietario.split(" ")[0]+".":"Não invente o nome do proprietário."}
+
+Dados:
+${JSON.stringify(dados)}`;
+  const b=$("#aiAnalise"); b.disabled=true; $("#aiAnStatus").textContent=" O Claude está analisando…";
+  try{
+    const d=await sample.json(prompt,{cache:false});
+    $("#aiParecer").textContent=d.parecer||"";
+    if(d.conclusao){S.conclusao=d.conclusao;S.conclusaoEditada=true;$("#i-concl").value=d.conclusao;renderLaudo(update.last||compute())}
+    if(d.mensagem){$("#aiMsg").value=d.mensagem;$("#aiMsgWrap").hidden=false}
+    $("#aiAnStatus").textContent=" Pronto. A conclusão do laudo também foi atualizada.";
+  }catch(e){$("#aiAnStatus").textContent=" "+errMsg(e)}
+  finally{b.disabled=false}
+};
+
+/* ---- site: Claude pelo servidor da Mosaic ---- */
+function comprimir(file){
+  return new Promise((ok,fail)=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const max=1600, k=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement("canvas"); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+      const g=c.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,c.width,c.height); g.drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      ok({media_type:"image/jpeg",data:c.toDataURL("image/jpeg",0.85).split(",")[1]});
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);fail({code:"image_rejected"})};
+    img.src=url;
+  });
+}
+function pedirSenha(){
+  return new Promise(resolve=>{
+    const d=$("#dlgLogin"); $("#loginErro").textContent=""; $("#loginSenha").value="";
+    const fechar=v=>{d.close();resolve(v)};
+    $("#loginOk").onclick=async()=>{
+      $("#loginOk").disabled=true;
+      try{
+        const r=await fetch("/api/entrar",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({senha:$("#loginSenha").value})});
+        const j=await r.json().catch(()=>({}));
+        if(r.ok) fechar(true); else $("#loginErro").textContent=j.erro||"Não foi possível entrar.";
+      }catch(e){$("#loginErro").textContent="Sem conexão. Tente de novo."}
+      finally{$("#loginOk").disabled=false}
+    };
+    $("#loginCancel").onclick=()=>fechar(false);
+    $("#loginSenha").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#loginOk").click()}};
+    try{d.showModal()}catch(e){d.setAttribute("open","")}
+    setTimeout(()=>$("#loginSenha").focus(),30);
+  });
+}
+async function chamarClaude(prompt,opts){
+  opts=opts||{};
+  const imagens=[];
+  for(const f of (opts.images||[])) imagens.push(await comprimir(f));
+  for(let tentativa=0;tentativa<2;tentativa++){
+    let r;
+    try{ r=await fetch("/api/analisar",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,imagens}),signal:opts.signal}); }
+    catch(e){ if(e&&e.name==="AbortError") throw {code:"cancelled"}; throw {code:"site",message:"Sem conexão com o servidor. Tente de novo."}; }
+    const j=await r.json().catch(()=>({}));
+    if(r.status===401&&j.erro==="login"){ if(tentativa===0&&await pedirSenha()) continue; throw {code:"site",message:"Entre com a senha da Mosaic para usar o Claude."}; }
+    if(!r.ok) throw {code:"site",message:j.erro||"O Claude não conseguiu responder agora."};
+    return j.dados;
+  }
+}
+sample={json:chamarClaude};
+$("#ai").hidden=false; $("#aiAnBox").hidden=false; $("#aiFileBtn").hidden=false; maxImgs=6;
+
+listarSalvas(); renderAll();
+})();
+</script>
+</body>
+</html>
